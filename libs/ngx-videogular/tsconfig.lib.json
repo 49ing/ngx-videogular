@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/libs/ngx-videogular",
     "baseUrl": ".",
-    "target": "es2020",
+    "target": "es2015",
     "module": "esnext",
     "stripInternal": false,
     "moduleResolution": "node",
@@ -35,6 +35,5 @@
     "flatModuleId": "@videogular/ngx-videogular",
     "skipTemplateCodegen": true,
     "enableResourceInlining": true,
-    "compilationMode": "partial"
   }
 }
