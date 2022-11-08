@@ -26,7 +26,7 @@ Import definition:
 
 ```typescript
 ...
-import {VgImaAdsModule} from '@videogular/ngx-videogular/ima-ads';
+import {VgImaAdsModule} from '@49ing/ngx-videogular/ima-ads';
 
 @NgModule({
     ...

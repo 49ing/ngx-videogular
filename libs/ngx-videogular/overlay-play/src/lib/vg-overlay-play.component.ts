@@ -9,7 +9,7 @@ import {
   HostBinding,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { VgApiService, VgFullscreenApiService, VgControlsHiddenService, VgStates } from '@videogular/ngx-videogular/core';
+import { VgApiService, VgFullscreenApiService, VgControlsHiddenService, VgStates } from '@49ing/ngx-videogular/core';
 
 @Component({
   selector: 'vg-overlay-play',

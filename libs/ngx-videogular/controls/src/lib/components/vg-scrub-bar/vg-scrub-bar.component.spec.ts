@@ -6,7 +6,7 @@ import {
   VgMediaElement,
   VgStates,
   VgMediaDirective,
-} from '@videogular/ngx-videogular/core';
+} from '@49ing/ngx-videogular/core';
 
 describe('Scrub bar', () => {
   let scrubBar: VgScrubBarComponent;

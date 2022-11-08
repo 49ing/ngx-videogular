@@ -6,7 +6,7 @@ Import definition:
 
 ```typescript
 ...
-import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
+import {VgBufferingModule} from '@49ing/ngx-videogular/buffering';
 
 @NgModule({
     ...

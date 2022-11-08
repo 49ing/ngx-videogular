@@ -19,7 +19,7 @@
     "lib": ["dom", "es2015", "es5"],
     "types": [],
     "paths": {
-      "@videogular/ngx-videogular/*": ["./*/src/index"]
+      "@49ing/ngx-videogular/*": ["./*/src/index"]
     }
   },
   "files": ["public-api.ts"],
@@ -32,8 +32,9 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@videogular/ngx-videogular",
+    "flatModuleId": "@49ing/ngx-videogular",
     "skipTemplateCodegen": true,
     "enableResourceInlining": true,
+    "compilationMode": "partial"
   }
 }

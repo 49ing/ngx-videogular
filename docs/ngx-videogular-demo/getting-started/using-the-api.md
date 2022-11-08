@@ -40,7 +40,7 @@ Now on your `Component` get the API:
 
 ```typescript
 import {Component} from '@angular/core';
-import {VgApiService} from '@videogular/ngx-videogular/core';
+import {VgApiService} from '@49ing/ngx-videogular/core';
 
 @Component({
     selector: 'bound-player',

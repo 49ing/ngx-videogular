@@ -1,6 +1,6 @@
 # BitrateOptions
 
-Interface available on `@videogular/ngx-videogular/core` module.
+Interface available on `@49ing/ngx-videogular/core` module.
 
 ## Properties
 

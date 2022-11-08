@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { fromEvent } from 'rxjs';
-import { VgApiService, VgControlsHiddenService, VgStates } from '@videogular/ngx-videogular/core';
+import { VgApiService, VgControlsHiddenService, VgStates } from '@49ing/ngx-videogular/core';
 
 @Component({
   selector: 'vg-controls',

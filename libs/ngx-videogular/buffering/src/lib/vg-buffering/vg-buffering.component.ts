@@ -8,7 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IPlayable, VgApiService } from '@videogular/ngx-videogular/core';
+import { IPlayable, VgApiService } from '@49ing/ngx-videogular/core';
 
 @Component({
   selector: 'vg-buffering',
