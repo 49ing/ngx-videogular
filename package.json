@@ -1,12 +1,8 @@
 {
-  "name": "ngx-videogular",
+  "name": "@49ing/ngx-videogular",
   "version": "5.0.1",
   "license": "MIT",
   "description": "The HTML5 video player for Angular 2 and successor to videogular2",
-  "author": {
-    "name": "Jaime 'Gondola' Oliveira",
-    "email": "jaime.amo18@gmail.com"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org",
@@ -15,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/videogular/ngx-videogular.git"
+    "url": "https://github.com/49ing/ngx-videogular.git"
   },
   "bugs": {
-    "url": "https://github.com/videogular/ngx-videogular/issues"
+    "url": "https://github.com/49ing/ngx-videogular/issues"
   },
-  "homepage": "https://github.com/videogular/ngx-videogular#readme",
+  "homepage": "https://github.com/49ing/ngx-videogular#readme",
   "keywords": [
     "video",
     "player",
@@ -41,7 +37,7 @@
     "test:ci": "ng test ngx-videogular --watch=false --progress=false --browsers=FirefoxHeadless",
     "build:docs": "cross-env NODE_ENV=production ng build ngx-videogular-demo --configuration production --base-href \"https://videogular.github.io/ngx-videogular/\" && cd docs/ngx-videogular-demo && gitbook install && gitbook build && cd -",
     "predeploy": "npm run build:docs",
-    "deploy:docs": "angular-cli-ghpages --dir ./dist/docs/ngx-videogular-demo --name=Videogular --email=jaime.amo18@gmail.com",
+    "deploy:docs": "angular-cli-ghpages --dir ./dist/docs/ngx-videogular-demo --name=Videogular",
     "copy-files": "cp README.md dist/libs/ngx-videogular/README.md && cp LICENSE dist/libs/ngx-videogular/LICENSE",
     "build:css": "node scripts/fonts-cpt.js",
     "build:lib": "ng build ngx-videogular --configuration production && npm run build:css && npm run copy-files",
