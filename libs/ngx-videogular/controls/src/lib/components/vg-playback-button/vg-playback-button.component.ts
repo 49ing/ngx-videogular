@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { VgApiService } from '@videogular/ngx-videogular/core';
+import { VgApiService } from '@49ing/ngx-videogular/core';
 
 @Component({
   selector: 'vg-playback-button',

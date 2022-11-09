@@ -10,7 +10,7 @@ ng new single-media-player --style=scss
 Now you can install the `ngx-videogular` library and `core-js` typings:
 
 ```bash
-npm install @videogular/ngx-videogular --save
+npm install @49ing/ngx-videogular --save
 npm install @types/core-js --save-dev
 ```
 
@@ -25,7 +25,7 @@ If you want to, you can use the official Videogular font to set icons on your bu
        {
            ...
            "styles": [
-               "node_modules/@videogular/ngx-videogular/fonts/videogular.css",
+               "node_modules/@49ing/ngx-videogular/fonts/videogular.css",
                "styles.scss"
            ],
            ...
@@ -46,10 +46,10 @@ Open `src/app/app.module.ts` and remove the FormsModule and the HttpModule, we w
 ```typescript
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {VgCoreModule} from '@videogular/ngx-videogular/core';
-import {VgControlsModule} from '@videogular/ngx-videogular/controls';
-import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
-import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
+import {VgCoreModule} from '@49ing/ngx-videogular/core';
+import {VgControlsModule} from '@49ing/ngx-videogular/controls';
+import {VgOverlayPlayModule} from '@49ing/ngx-videogular/overlay-play';
+import {VgBufferingModule} from '@49ing/ngx-videogular/buffering';
 import {SingleMediaPlayer} from './single-media-player';
 
 @NgModule({

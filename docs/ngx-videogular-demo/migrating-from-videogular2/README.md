@@ -3,10 +3,10 @@
 ## Installing
 
 ```shell
-npm i --save @videogular/ngx-videogular
+npm i --save @49ing/ngx-videogular
 ```
 
-**Note:** I cannot stress this enough but **please** check that you're installing `ngx-videogular` with the `@videogular` scope. There's an unscoped package published but it has nothing to do with the Videogular org. This repo (the one you're reading this from) is the **official** one.
+**Note:** I cannot stress this enough but **please** check that you're installing `ngx-videogular` with the `@49ing` scope. There's an unscoped package published but it has nothing to do with the Videogular org. This repo (the one you're reading this from) is the **official** one.
 
 ## Importing the Stylesheet
 
@@ -38,7 +38,7 @@ npm i --save @videogular/ngx-videogular
        {
            ...
            "styles": [
-               "node_modules/@videogular/ngx-videogular/fonts/videogular.css",
+               "node_modules/@49ing/ngx-videogular/fonts/videogular.css",
                "styles.scss"
            ],
            ...
@@ -66,7 +66,7 @@ import {SOME_VIDEOGULAR_MODULE} from 'videogular2/SOME_VIDEOGULAR_MODULE';
 #### **New way (module imports)**
 
 ```typescript
-import {SOME_VIDEOGULAR_MODULE} from '@videogular/ngx-videogular/SOME_VIDEOGULAR_MODULE';
+import {SOME_VIDEOGULAR_MODULE} from '@49ing/ngx-videogular/SOME_VIDEOGULAR_MODULE';
 ```
 
 #### **Old way (API imports)**
@@ -78,7 +78,7 @@ import {SOME_VIDEOGULAR_CLASS} from 'videogular2/compiled/SOME_VIDEOGULAR_MODULE
 #### **New way (API imports)**
 
 ```typescript
-import {SOME_VIDEOGULAR_CLASS} from '@videogular/ngx-videogular/SOME_VIDEOGULAR_MODULE';
+import {SOME_VIDEOGULAR_CLASS} from '@49ing/ngx-videogular/SOME_VIDEOGULAR_MODULE';
 ```
 
 For more module-specific API imports, please check out [Modules](https://github.com/videogular/ngx-videogular/tree/master/docs/ngx-videogular-demo/modules).

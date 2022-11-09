@@ -9,7 +9,7 @@ import {
   PipeTransform,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { VgApiService } from '@videogular/ngx-videogular/core';
+import { VgApiService } from '@49ing/ngx-videogular/core';
 
 // Workaround until we can use UTC with Angular Date Pipe
 @Pipe({ name: 'vgUtc' })

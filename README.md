@@ -2,8 +2,8 @@
 
 [![travis build](https://travis-ci.org/videogular/ngx-videogular.svg?branch=master)](https://travis-ci.org/videogular/ngx-videogular)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@videogular/ngx-videogular)
-![npm](https://img.shields.io/npm/dy/@videogular/ngx-videogular)
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@49ing/ngx-videogular)
+![npm](https://img.shields.io/npm/dy/@49ing/ngx-videogular)
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)]()
 
 **Ngx-Videogular is an HTML5 video player for Angular 2.0**. Videogular is a wrapper over the HTML5 video tag, so you can just add whatever you want. This provides a very powerful, but simple to use solution, for everybody.
@@ -14,7 +14,7 @@
 
 ## Moving from Videogular2 to Ngx-Videogular
 
-Since `videogular2` is unmaintained, we suggest moving to `@videogular/ngx-videogular`. </br>
+Since `videogular2` is unmaintained, we suggest moving to `@49ing/ngx-videogular`. </br>
 You can check out the [migration guide here](https://videogular.github.io/ngx-videogular/docs/migrating-from-videogular2/).
 
 ### 48% reduction on bundle size? Ivy Support? </br> All of that and more!
@@ -22,7 +22,7 @@ You can check out the [migration guide here](https://videogular.github.io/ngx-vi
 ## DashJS 2.X.X deprecation
 
 From 2.0.1 onwards we'll only support DashJS v3. </br>
-For DashJS v2 compatiblity, please use @videogular/ngx-videogular version < 2.0.1.
+For DashJS v2 compatiblity, please use @49ing/ngx-videogular version < 2.0.1.
 
 ## How to install
 

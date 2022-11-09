@@ -8,7 +8,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { VgApiService, VgStates } from '@videogular/ngx-videogular/core';
+import { VgApiService, VgStates } from '@49ing/ngx-videogular/core';
 
 @Component({
   selector: 'vg-play-pause',

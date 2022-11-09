@@ -6,7 +6,7 @@ Import definition:
 
 ```typescript
 ...
-import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgCoreModule } from '@49ing/ngx-videogular/core';
 
 @NgModule({
     ...

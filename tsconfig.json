@@ -16,8 +16,8 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "dom"],
     "paths": {
-      "@videogular/ngx-videogular": ["libs/ngx-videogular/public-api"],
-      "@videogular/ngx-videogular/*": ["libs/ngx-videogular/*/src/index"]
+      "@49ing/ngx-videogular": ["libs/ngx-videogular/public-api"],
+      "@49ing/ngx-videogular/*": ["libs/ngx-videogular/*/src/index"]
     }
   },
   "exclude": ["node_modules", "tmp"]
