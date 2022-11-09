@@ -2,11 +2,13 @@ import {
   Component,
   ElementRef,
   Input,
+  EventEmitter,
   HostListener,
   OnInit,
   ViewEncapsulation,
   HostBinding,
   OnDestroy,
+  Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { VgControlsHiddenService, VgApiService, VgStates } from '@49ing/ngx-videogular/core';
@@ -87,8 +89,10 @@ import { VgControlsHiddenService, VgApiService, VgStates } from '@49ing/ngx-vide
 export class VgScrubBarComponent implements OnInit, OnDestroy {
   @HostBinding('class.hide') hideScrubBar = false;
 
+  @Input() disabled = false;
   @Input() vgFor: string;
   @Input() vgSlider = true;
+  @Input() livePosition: number = 0;
 
   elem: HTMLElement;
   target: any;
@@ -96,6 +100,12 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
   wasPlaying = false;
 
   subscriptions: Subscription[] = [];
+
+  /**
+   * Seekable stream required for seeking
+   */
+  @Output() switchChannel: EventEmitter<number> = new EventEmitter();
+  @Output() seeking: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     ref: ElementRef,
@@ -122,11 +132,31 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
 
   onPlayerReady() {
     this.target = this.API.getMediaById(this.vgFor);
+    this.target?.subscriptions.loadedMetadata.subscribe((e) => {
+        // Set init seek back live duration
+        this.target.capturedSeekBackLiveDuration = this.target.duration;
+      });
   }
 
-  protected seekStart() {
+  protected seekStart(offset: number) {
+    if (this.isWebRTC()) {
+      const percentage = Math.max(
+        Math.min((offset * 100) / this.elem.scrollWidth, 99.9),
+
+        0
+      );
+
+      this.target.pause();
+
+      console.log(`switching to HLS...percentage ${percentage}`);
+      this.switchChannel.emit(percentage);
+
+      return;
+    }
+
     if (this.target.canPlay) {
       this.isSeeking = true;
+      this.seeking.emit(this.isSeeking);
       if (this.target.state === VgStates.VG_PLAYING) {
         this.wasPlaying = true;
       }
@@ -137,24 +167,53 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
   protected seekMove(offset: number) {
     if (this.isSeeking) {
       const percentage = Math.max(
-        Math.min((offset * 100) / this.elem.scrollWidth, 99.9),
+        Math.min((offset * 100) / this.getWidth(), 99.9),
         0
       );
-      this.target.time.current = (percentage * this.target.time.total) / 100;
-      this.target.seekTime(percentage, true);
+      this.target.time.current = (percentage * this.getTotalTime()) / 100;
+      this.seekTime(percentage);
     }
   }
 
-  protected seekEnd(offset: number | false) {
-    this.isSeeking = false;
-    if (this.target.canPlay) {
-      if (offset !== false) {
-        const percentage = Math.max(
-          Math.min((offset * 100) / this.elem.scrollWidth, 99.9),
-          0
+  protected captureSeekBackLiveDuration() {
+    if (this.isLiveTime()) {
+      this.target.capturedSeekBackLiveDuration = this.target.duration;
+    }
+  }
+
+  protected getTotalTime() {
+    if (!this.target.isLive) {
+      return this.target.time.total;
+    } else {
+      if (this.isLiveTime()) {
+        /*
+         * In live mode we need to check duration because
+         * time total is not live updated
+         */
+        return this.target.duration * 1000;
+      } else {
+        /*
+         * In live mode when we seek back we need to use captured
+         * duration at that moment and do division with that duration time
+         */
+        return (
+          (this.target?.capturedSeekBackLiveDuration ?? this.target.duration) *
+          1000
         );
-        this.target.seekTime(percentage, true);
       }
+    }
+  }
+
+  protected seekEnd(offset: number) {
+    this.isSeeking = false;
+    this.seeking.emit(this.isSeeking);
+    if (this.target.canPlay) {
+      const percentage = Math.max(
+        Math.min((offset * 100) / this.getWidth(), 99.9),
+        0
+      );
+      this.seekTime(percentage);
+
       if (this.wasPlaying) {
         this.wasPlaying = false;
         this.target.play();
@@ -162,8 +221,43 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
     }
   }
 
+  protected getWidth(): number {
+    /*
+     In live mode scrollWidth
+     has hidden overflow and that's why we have
+     bad percentage calculation
+    */
+    if (!this.target.isLive && !this.target.elem?.src.includes('blob')) {
+      return this.elem.scrollWidth;
+    } else {
+      return this.elem.clientWidth;
+    }
+  }
+
+  protected seekTime(percentage: number): void {
+    if (!this.target.isLive) {
+      // Regular calculation
+      this.target.seekTime(percentage, true);
+    } else {
+      if (this.isLiveTime()) {
+        // Regular calculation
+        this.target.seekTime(percentage, true);
+      } else {
+        /*
+         * In live mode when we seek back we need to use captured
+         * duration at that moment and do division with that duration time
+         */
+        const currentTime =
+          percentage * this.target?.capturedSeekBackLiveDuration * 10;
+        this.target.time.current = currentTime;
+        this.target.seekTime(currentTime / 1000, false);
+      }
+    }
+  }
+
   protected touchEnd() {
     this.isSeeking = false;
+    this.seeking.emit(this.isSeeking);
     if (this.wasPlaying) {
       this.wasPlaying = false;
       this.target.play();
@@ -182,13 +276,14 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
 
   @HostListener('mousedown', ['$event'])
   onMouseDownScrubBar($event: any) {
-    if (this.target) {
-      if (!this.target.isLive) {
-        if (!this.vgSlider) {
-          this.seekEnd($event.offsetX);
-        } else {
-          this.seekStart();
-        }
+    if (this.target && !this.disabled) {
+      if (this.target.isLive) {
+        this.captureSeekBackLiveDuration();
+      }
+      if (!this.vgSlider) {
+        this.seekEnd($event.offsetX);
+      } else {
+        this.seekStart($event.offsetX);
       }
     }
   }
@@ -196,7 +291,10 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
   @HostListener('document:mousemove', ['$event'])
   onMouseMoveScrubBar($event: any) {
     if (this.target) {
-      if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+      if (this.target.isLive) {
+        this.captureSeekBackLiveDuration();
+      }
+      if (this.vgSlider && this.isSeeking) {
         this.seekMove($event.offsetX);
       }
     }
@@ -205,21 +303,25 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
   @HostListener('document:mouseup', ['$event'])
   onMouseUpScrubBar($event: any) {
     if (this.target) {
-      if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+      if (this.target.isLive) {
+        this.captureSeekBackLiveDuration();
+      }
+      if (this.vgSlider && this.isSeeking) {
         this.seekEnd($event.offsetX);
       }
     }
   }
 
   @HostListener('touchstart', ['$event'])
-  onTouchStartScrubBar(_$event: any) {
-    if (this.target) {
-      if (!this.target.isLive) {
-        if (!this.vgSlider) {
-          this.seekEnd(false);
-        } else {
-          this.seekStart();
-        }
+  onTouchStartScrubBar($event: any) {
+    if (this.target && !this.disabled) {
+      if (this.target.isLive) {
+        this.captureSeekBackLiveDuration();
+      }
+      if (!this.vgSlider) {
+        this.seekEnd(this.getTouchOffset($event));
+      } else {
+        this.seekStart(this.getTouchOffset($event));
       }
     }
   }
@@ -227,7 +329,10 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
   @HostListener('document:touchmove', ['$event'])
   onTouchMoveScrubBar($event: any) {
     if (this.target) {
-      if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+      if (this.target.isLive) {
+        this.captureSeekBackLiveDuration();
+      }
+      if (this.vgSlider && this.isSeeking) {
         this.seekMove(this.getTouchOffset($event));
       }
     }
@@ -237,7 +342,7 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
     _$event: any
   ) {
     if (this.target) {
-      if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+      if (this.vgSlider && this.isSeeking) {
         this.touchEnd();
       }
     }
@@ -247,33 +352,54 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
     _$event: any
   ) {
     if (this.target) {
-      if (!this.target.isLive && this.vgSlider && this.isSeeking) {
+      if (this.vgSlider && this.isSeeking) {
         this.touchEnd();
       }
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  arrowAdjustVolume(event: KeyboardEvent) {
-    if (this.target) {
-      if (event.keyCode === 38 || event.keyCode === 39) {
-        event.preventDefault();
-        this.target.seekTime((this.target.time.current + 5000) / 1000, false);
-      } else if (event.keyCode === 37 || event.keyCode === 40) {
-        event.preventDefault();
-        this.target.seekTime((this.target.time.current - 5000) / 1000, false);
-      }
+  /** Original code have this function but there is no point to have something like this
+   *  inside vg-scrub-bar for us since we manipulate seek time.
+   *  Plus naming (arrowAdjustVolume) in library is completely wrong.
+   *
+   * @HostListener('keydown', ['$event'])
+   * arrowAdjustVolume(event: KeyboardEvent) {
+   *  if (this.target) {
+   *    if (event.key === 'ArrowUp' || event.key === 'ArrowRight') {
+   *      event.preventDefault();
+   *      this.target.seekTime((this.target.time.current + 5000) / 1000, false);
+   *    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+   *      event.preventDefault();
+   *      this.target.seekTime((this.target.time.current - 5000) / 1000, false);
+   *    }
+   *  }
+   * }
+   */
+
+  isLiveTime() {
+    if (this.target && this.target.isLive) {
+      return this.target.time.current >= this.livePosition * 1000;
     }
   }
 
   getPercentage() {
-    return this.target
-      ? Math.round((this.target.time.current * 100) / this.target.time.total) + '%'
-      : '0%';
+    if (this.target) {
+      return (
+        Math.round((this.target.time.current * 100) / this.getTotalTime()) + '%'
+      );
+    } else {
+      return '0%';
+    }
   }
 
   onHideScrubBar(hide: boolean) {
     this.hideScrubBar = hide;
+  }
+
+  private isWebRTC() {
+    const target = this.API.getDefaultMedia();
+    const video = document.getElementById(target?.id) as HTMLVideoElement;
+    return video?.id.startsWith('video-webrtc-');
   }
 
   ngOnDestroy() {
