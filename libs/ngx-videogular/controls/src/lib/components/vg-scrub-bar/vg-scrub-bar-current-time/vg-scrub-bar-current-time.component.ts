@@ -4,7 +4,7 @@ import {
   ElementRef,
   OnInit,
   ViewEncapsulation,
-  OnDestroy,
+  OnDestroy
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { VgApiService } from '@49ing/ngx-videogular/core';
@@ -55,6 +55,10 @@ export class VgScrubBarCurrentTimeComponent implements OnInit, OnDestroy {
   @Input() vgFor: string;
   @Input() vgSlider = false;
 
+  @Input() livePosition: number = 0;
+
+  @Input() isWebRTC: boolean;
+
   elem: HTMLElement;
   target: any;
 
@@ -78,11 +82,51 @@ export class VgScrubBarCurrentTimeComponent implements OnInit, OnDestroy {
     this.target = this.API.getMediaById(this.vgFor);
   }
 
+  protected getTotalTime() {
+    if (!this.target.isLive) {
+      return this.target.time.total;
+    } else {
+      if (this.isLiveTime()) {
+        /*
+         * In live mode we need to check duration because
+         * time total is not live updated
+         */
+        return this.target.duration * 1000;
+      } else {
+        /*
+         * In live mode when we seek back we need to use captured
+         * duration at that moment and do division with that duration time
+         */
+        return (
+          (this.target?.capturedSeekBackLiveDuration ?? this.target.duration) *
+          1000
+        );
+      }
+    }
+  }
+
+  isLiveTime() {
+    if (this.target && this.target.isLive) {
+      return this.target.time.current >= this.livePosition * 1000;
+    }
+  }
+
+  /**
+   * In case of WebRTC return 100%
+   */
   getPercentage() {
-    return this.target
-      ? Math.round((this.target.time.current * 100) / this.target.time.total) +
-          '%'
-      : '0%';
+    if (this.isWebRTC) {
+      return '100%';
+    } else if (this.target) {
+      return (
+        Math.min(
+          Math.round((this.target.time.current * 100) / this.getTotalTime()),
+          100
+        ) + '%'
+      );
+    } else {
+      return '0%';
+    }
   }
 
   ngOnDestroy() {
