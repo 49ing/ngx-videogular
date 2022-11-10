@@ -43,8 +43,13 @@ export class VgUtcPipe implements PipeTransform {
   selector: 'vg-time-display',
   encapsulation: ViewEncapsulation.None,
   template: `
-    <span *ngIf="target?.isLive">LIVE</span>
-    <span *ngIf="!target?.isLive">{{ getTime() | vgUtc: vgFormat }}</span>
+    <span *ngIf="(target?.isLive || isWebRTC || isHLS) && !ignoreLive">LIVE</span>
+    <span *ngIf="!target?.isLive && !isWebRTC && !isHLS">{{
+      getTime() | vgUtc: vgFormat
+    }}</span>
+    <span *ngIf="(isWebRTC || isHLS) && ignoreLive">{{
+      getTime() | vgUtc: vgFormat
+    }}</span>
     <ng-content></ng-content>
   `,
   styles: [
@@ -73,6 +78,14 @@ export class VgTimeDisplayComponent implements OnInit, OnDestroy {
   @Input() vgProperty = 'current';
   @Input() vgFormat = 'mm:ss';
 
+  /**
+   * We want to ignore live in WebRTC/HLS when we want to display current time
+   */
+  @Input() ignoreLive: boolean = false;
+  @Input() isWebRTC: boolean = false;
+  @Input() isHLS: boolean = false;
+  @Input() duration: number = 0; // timestamp
+
   elem: HTMLElement;
   target: any;
 
@@ -96,12 +109,16 @@ export class VgTimeDisplayComponent implements OnInit, OnDestroy {
     this.target = this.API.getMediaById(this.vgFor);
   }
 
+  /**
+   * In case of WebRTC add duration - how much video is streaming already)
+   *
+   */
   getTime() {
     let t = 0;
 
     if (this.target) {
       t = Math.round(this.target.time[this.vgProperty]);
-      t = isNaN(t) || this.target.isLive ? 0 : t;
+      t = isNaN(t) ? 0 : this.isWebRTC ? this.duration * 1000 : t;
     }
 
     return t;
