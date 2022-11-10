@@ -43,11 +43,11 @@ This module is dependant of `hls.js` library and you need to install via `npm in
 
 ## Inputs
 
-| Input | Description |
-|--- |--- |
-| vgHls | Url to an HLS m3u8 file. |
-| vgHlsHeaders | Key/Value pairs that will be added as headers to the m3u8 file. Key is header name. Value is header value. |
-| config | Configuration parameters could be provided to hls.js upon instantiation of Hls object. Check out hls.js documentation. |
+| Input | Description                                                                                                      |
+|--- |------------------------------------------------------------------------------------------------------------------|
+| vgHls | Url to an HLS m3u8 file.                                                                                         |
+| vgHlsHeaders | Key/Value pairs that will be added as headers to the m3u8 file. Key is header name. Value is header value.       |
+| config | Configuration parameters could be provided to hls.js upon instantiation of Hls object. Check out the [hls.js API](https://github.com/video-dev/hls.js/blob/master/docs/API.md). |
 ## Outputs
 
 | Output | Description |
