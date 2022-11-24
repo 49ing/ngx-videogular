@@ -170,7 +170,7 @@ export class VgFullscreenApiService {
     this.onChangeFullscreen.emit(false);
 
     // Exit from native fullscreen
-    if (this.isAvailable && this.nativeFullscreen) {
+    if (this.isAvailable && this.nativeFullscreen && document[this.polyfill.exit]) {
       document[this.polyfill.exit]();
     }
   }
