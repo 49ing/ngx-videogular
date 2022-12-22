@@ -177,7 +177,6 @@ export class VgFullscreenApiService {
 
   @HostListener('document:fullscreenerror', ['$event'])
   onFullscreenerror(event: Event) {
-    console.log('An error occurred changing into fullscreen: ', event);
     this.isFullscreen = false;
     this.onChangeFullscreen.emit(false);
   }
