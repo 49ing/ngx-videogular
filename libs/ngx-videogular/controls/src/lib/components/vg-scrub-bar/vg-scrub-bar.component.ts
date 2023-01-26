@@ -148,7 +148,6 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
 
       this.target.pause();
 
-      console.log(`switching to HLS...percentage ${percentage}`);
       this.switchChannel.emit(percentage);
 
       return;

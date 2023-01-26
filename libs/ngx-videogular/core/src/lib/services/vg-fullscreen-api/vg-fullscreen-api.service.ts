@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter, QueryList } from '@angular/core';
+import { Injectable, EventEmitter, QueryList, HostListener } from '@angular/core';
 import { VgUtilsService } from '../vg-utils/vg-utils.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { VgMediaDirective } from '../../directives/vg-media/vg-media.directive';
@@ -138,9 +138,6 @@ export class VgFullscreenApiService {
       elem = this.videogularElement;
     }
 
-    this.isFullscreen = true;
-    this.onChangeFullscreen.emit(true);
-
     // Perform native full screen support
     if (this.isAvailable && this.nativeFullscreen) {
       // Fullscreen for mobile devices
@@ -159,6 +156,9 @@ export class VgFullscreenApiService {
         this.enterElementInFullScreen(this.videogularElement);
       }
     }
+
+    this.isFullscreen = true;
+    this.onChangeFullscreen.emit(true);
   }
 
   enterElementInFullScreen(elem: any) {
@@ -173,5 +173,11 @@ export class VgFullscreenApiService {
     if (this.isAvailable && this.nativeFullscreen && document[this.polyfill.exit]) {
       document[this.polyfill.exit]();
     }
+  }
+
+  @HostListener('document:fullscreenerror', ['$event'])
+  onFullscreenerror(event: Event) {
+    this.isFullscreen = false;
+    this.onChangeFullscreen.emit(false);
   }
 }
