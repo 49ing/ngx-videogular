@@ -155,10 +155,10 @@ export class VgFullscreenApiService {
       } else {
         this.enterElementInFullScreen(this.videogularElement);
       }
-
-      this.isFullscreen = true;
-      this.onChangeFullscreen.emit(true);
     }
+
+    this.isFullscreen = true;
+    this.onChangeFullscreen.emit(true);
   }
 
   enterElementInFullScreen(elem: any) {
