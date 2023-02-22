@@ -132,7 +132,12 @@ export class VgScrubBarComponent implements OnInit, OnDestroy {
 
   onPlayerReady() {
     this.target = this.API.getMediaById(this.vgFor);
-    this.target?.subscriptions.loadedMetadata.subscribe((e) => {
+
+    if (!this.target) {
+      return;
+    }
+
+    this.target.subscriptions.loadedMetadata.subscribe((e) => {
         // Set init seek back live duration
         this.target.capturedSeekBackLiveDuration = this.target.duration;
       });

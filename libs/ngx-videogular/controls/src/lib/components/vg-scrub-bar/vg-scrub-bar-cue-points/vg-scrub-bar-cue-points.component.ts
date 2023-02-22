@@ -79,6 +79,10 @@ export class VgScrubBarCuePointsComponent
   onPlayerReady() {
     this.target = this.API.getMediaById(this.vgFor);
 
+    if (!this.target) {
+      return;
+    }
+    
     const onTimeUpdate = this.target.subscriptions.loadedMetadata;
     this.subscriptions.push(
       onTimeUpdate.subscribe(this.onLoadedMetadata.bind(this))
