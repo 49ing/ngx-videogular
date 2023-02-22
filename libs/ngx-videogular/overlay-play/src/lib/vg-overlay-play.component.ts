@@ -115,6 +115,11 @@ export class VgOverlayPlayComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.controlsHidden.isHidden.subscribe(this.onHideControls.bind(this))
     );
+
+    if (!this.target) {
+      return;
+    }
+    
     this.subscriptions.push(
       this.target.subscriptions.bufferDetected.subscribe((isBuffering) =>
         this.onUpdateBuffer(isBuffering)

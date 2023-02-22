@@ -130,6 +130,10 @@ export class VgBufferingComponent implements OnInit, OnDestroy {
   onPlayerReady() {
     this.target = this.API.getMediaById(this.vgFor);
 
+    if (!this.target) {
+      return;
+    }
+
     this.subscriptions.push(
       this.target.subscriptions.bufferDetected.subscribe((isBuffering) =>
         this.onUpdateBuffer(isBuffering)
