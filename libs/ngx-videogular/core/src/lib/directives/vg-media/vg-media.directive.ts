@@ -435,27 +435,35 @@ export class VgMediaDirective implements OnInit, OnDestroy, IPlayable {
   }
   // @ts-ignore
   onTimeUpdate(event: any) {
-    const end = this.buffered.length - 1;
+    try {
+      const end = this.buffered.length - 1;
 
-    this.time = {
-      current: this.currentTime * 1000,
-      total: this.time.total,
-      left: (this.duration - this.currentTime) * 1000,
-    };
+      this.time = {
+        current: this.currentTime * 1000,
+        total: this.time.total,
+        left: (this.duration - this.currentTime) * 1000,
+      };
 
-    if (end >= 0) {
-      this.buffer = { end: this.buffered.end(end) * 1000 };
+      if (end >= 0) {
+        this.buffer = { end: this.buffered.end(end) * 1000 };
+      }
+      this.ref.detectChanges();
+    } catch (e) {
+      // swallow TimeRanges end errors for the sake of eating console noise
     }
-    this.ref.detectChanges();
   }
   // @ts-ignore
   onProgress(event: any) {
-    const end = this.buffered.length - 1;
+    try {
+      const end = this.buffered.length - 1;
 
-    if (end >= 0) {
-      this.buffer = { end: this.buffered.end(end) * 1000 };
+      if (end >= 0) {
+        this.buffer = { end: this.buffered.end(end) * 1000 };
+      }
+      this.ref.detectChanges();
+    } catch (e) {
+      // swallow TimeRanges end errors for the sake of eating console noise
     }
-    this.ref.detectChanges();
   }
   // @ts-ignore
   onVolumeChange(event: any) {
