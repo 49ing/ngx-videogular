@@ -91,18 +91,20 @@ export class VgControlsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     
-    this.subscriptions.push(
-      this.target.subscriptions.play.subscribe(this.onPlay.bind(this))
-    );
-    this.subscriptions.push(
-      this.target.subscriptions.pause.subscribe(this.onPause.bind(this))
-    );
-    this.subscriptions.push(
-      this.target.subscriptions.startAds.subscribe(this.onStartAds.bind(this))
-    );
-    this.subscriptions.push(
-      this.target.subscriptions.endAds.subscribe(this.onEndAds.bind(this))
-    );
+    if (this.target.subscriptions) {
+      this.subscriptions.push(
+        this.target.subscriptions.play.subscribe(this.onPlay.bind(this))
+      );
+      this.subscriptions.push(
+        this.target.subscriptions.pause.subscribe(this.onPause.bind(this))
+      );
+      this.subscriptions.push(
+        this.target.subscriptions.startAds.subscribe(this.onStartAds.bind(this))
+      );
+      this.subscriptions.push(
+        this.target.subscriptions.endAds.subscribe(this.onEndAds.bind(this))
+      );
+    }
   }
 
   ngAfterViewInit() {
