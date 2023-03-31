@@ -74,6 +74,9 @@ export class VgMuteComponent implements OnInit, OnDestroy {
 
   onPlayerReady() {
     this.target = this.API.getMediaById(this.vgFor);
+    if (!this.target) {
+      return;
+    }
     this.currentVolume = this.target.volume;
   }
 

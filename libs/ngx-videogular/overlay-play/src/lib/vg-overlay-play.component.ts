@@ -120,11 +120,13 @@ export class VgOverlayPlayComponent implements OnInit, OnDestroy {
       return;
     }
     
-    this.subscriptions.push(
-      this.target.subscriptions.bufferDetected.subscribe((isBuffering) =>
-        this.onUpdateBuffer(isBuffering)
-      )
-    );
+    if (this.target.subscriptions) {
+      this.subscriptions.push(
+        this.target.subscriptions.bufferDetected.subscribe((isBuffering) =>
+          this.onUpdateBuffer(isBuffering)
+        )
+      );
+    }
   }
 
   onUpdateBuffer(isBuffering) {
