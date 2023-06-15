@@ -141,7 +141,7 @@ export class VgFullscreenApiService {
     // Perform native full screen support
     if (this.isAvailable && this.nativeFullscreen) {
       // Fullscreen for mobile devices
-      if (VgUtilsService.isMobileDevice()) {
+      if (VgUtilsService.isMobileDevice() && !VgUtilsService.isIpadOS()) {
         // We should make fullscreen the video object if it doesn't have native fullscreen support
         // Fallback! We can't set vg-player on fullscreen, only video/audio objects
         if (
