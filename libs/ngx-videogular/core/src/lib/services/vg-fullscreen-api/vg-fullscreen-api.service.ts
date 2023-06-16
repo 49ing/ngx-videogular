@@ -83,7 +83,7 @@ export class VgFullscreenApiService {
       }
     }
 
-    if (VgUtilsService.isiOSDevice()) {
+    if (VgUtilsService.isiOSDevice() && !VgUtilsService.isIpadOS()) {
       this.polyfill = APIs.ios;
     }
 
