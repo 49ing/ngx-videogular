@@ -125,6 +125,11 @@ export class VgFullscreenApiService {
     this.onChangeFullscreen.emit(this.isFullscreen);
   }
 
+  changeFullscreen(isFullscreen: boolean) {
+    this.isFullscreen = isFullscreen;
+    this.onChangeFullscreen.emit(isFullscreen);
+  }
+
   toggleFullscreen(element: any = null) {
     if (this.isFullscreen) {
       this.exit();
