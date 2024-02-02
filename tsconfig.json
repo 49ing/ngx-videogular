@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "module": "es2020",
     "typeRoots": [
       "node_modules/@types"
@@ -27,7 +27,8 @@
       "@49ing/ngx-videogular/*": [
         "libs/ngx-videogular/*/src/index"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   },
   "exclude": [
     "node_modules",
