@@ -30,7 +30,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build ngx-videogular",
     "semantic-release": "semantic-release",
     "update": "ng update @nrwl/workspace",
     "test:commit": "ng test ngx-videogular --watch=false --progress=false --browsers=ChromeHeadless",
