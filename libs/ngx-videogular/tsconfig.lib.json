@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/libs/ngx-videogular",
     "baseUrl": ".",
-    "target": "es2015",
+    "target": "es2020",
     "module": "esnext",
     "stripInternal": false,
     "moduleResolution": "node",
@@ -16,14 +16,24 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "lib": ["dom", "es2015", "es5"],
+    "lib": [
+      "dom",
+      "es2015",
+      "es5"
+    ],
     "types": [],
     "paths": {
-      "@49ing/ngx-videogular/*": ["./*/src/index"]
+      "@49ing/ngx-videogular/*": [
+        "./*/src/index"
+      ]
     }
   },
-  "files": ["public-api.ts"],
-  "include": ["**/*.ts"],
+  "files": [
+    "public-api.ts"
+  ],
+  "include": [
+    "**/*.ts"
+  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"

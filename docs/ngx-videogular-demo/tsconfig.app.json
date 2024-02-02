@@ -5,14 +5,22 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    "target": "es2015",
-    "lib": ["es2018", "dom"],
+    "target": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true
   },
-  "include": ["**/*.d.ts"],
-  "files": ["src/main.ts", "src/polyfills.ts"],
+  "include": [
+    "**/*.d.ts"
+  ],
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
   "exclude": [
     "src/test.ts",
     "**/*.spec.ts",
