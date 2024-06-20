@@ -11,14 +11,27 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "ES2022",
     "module": "es2020",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "paths": {
-      "@49ing/ngx-videogular": ["libs/ngx-videogular/public-api"],
-      "@49ing/ngx-videogular/*": ["libs/ngx-videogular/*/src/index"]
-    }
+      "@49ing/ngx-videogular": [
+        "libs/ngx-videogular/public-api"
+      ],
+      "@49ing/ngx-videogular/*": [
+        "libs/ngx-videogular/*/src/index"
+      ]
+    },
+    "useDefineForClassFields": false
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
