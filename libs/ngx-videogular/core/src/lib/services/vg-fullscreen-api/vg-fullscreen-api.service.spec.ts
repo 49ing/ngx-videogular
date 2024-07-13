@@ -26,72 +26,90 @@ describe('Videogular Player', () => {
     expect(fsAPI.polyfill.onerror).toBe('fullscreenerror');
   });
 
-  it('Should request an element to enter in fullscreen mode (desktop)', () => {
-    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(() => {});
+  it('Should request an element to enter in fullscreen mode (desktop)', async () => {
+    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(async () => {});
 
-    fsAPI.request(null);
+    await fsAPI.request(null);
 
     expect(fsAPI.isFullscreen).toBeTruthy();
-    expect(fsAPI.enterElementInFullScreen).toHaveBeenCalledWith(elem);
+    expect(await fsAPI.enterElementInFullScreen).toHaveBeenCalledWith(elem);
   });
 
-  it('Should request an element to enter in fullscreen mode (mobile)', () => {
+  it('Should request an element to enter in fullscreen mode (mobile)', async () => {
     spyOn(VgUtilsService, 'isMobileDevice').and.callFake(() => {
       return true;
     });
-    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(() => {});
+    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(async () => {});
 
-    fsAPI.request(null);
+    await fsAPI.request(null);
 
     expect(fsAPI.isFullscreen).toBeTruthy();
     expect(VgUtilsService.isMobileDevice).toHaveBeenCalled();
-    expect(fsAPI.enterElementInFullScreen).toHaveBeenCalledWith(elem);
+    expect(await fsAPI.enterElementInFullScreen).toHaveBeenCalledWith(elem);
   });
 
-  it('Should request an element to enter in fullscreen mode (mobile with param elem)', () => {
+  it('Should request an element to enter in fullscreen mode (mobile with param elem)', async () => {
     spyOn(VgUtilsService, 'isMobileDevice').and.callFake(() => {
       return true;
     });
-    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(() => {});
+    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(async () => {});
 
-    fsAPI.request(elem);
+    await fsAPI.request(elem);
 
     expect(fsAPI.isFullscreen).toBeTruthy();
     expect(VgUtilsService.isMobileDevice).toHaveBeenCalled();
-    expect(fsAPI.enterElementInFullScreen).toHaveBeenCalledWith(elem);
+    expect(await fsAPI.enterElementInFullScreen).toHaveBeenCalledWith(elem);
   });
 
-  it('Should not request an element to enter in fullscreen mode', () => {
-    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(() => {});
+  it('Should not request an element to enter in fullscreen mode', async () => {
+    spyOn(fsAPI, 'enterElementInFullScreen').and.callFake(async () => {});
 
     fsAPI.nativeFullscreen = false;
-    fsAPI.request(elem);
+    await fsAPI.request(elem);
 
-    expect(fsAPI.enterElementInFullScreen).not.toHaveBeenCalled();
+    expect(await fsAPI.enterElementInFullScreen).not.toHaveBeenCalled();
   });
 
-  it('Should enter in fullscreen mode', () => {
-    spyOn(elem as any, 'requestFullscreen').and.callThrough();
-
-    fsAPI.enterElementInFullScreen(elem);
-
-    expect((elem as any).requestFullscreen).toHaveBeenCalled();
+  it('Should enter in fullscreen mode', async () => {
+    // Create a new element
+    const elem = document.createElement('div');
+  
+    // Append the element to the DOM
+    document.body.appendChild(elem);
+  
+    // Mock the requestFullscreen method
+    const requestFullscreenSpy = spyOn(elem as any, 'requestFullscreen').and.callFake(() => {
+      return new Promise<void>((resolve) => {
+        resolve();
+      });
+    });
+  
+    // Call the fullscreen function
+    await fsAPI.enterElementInFullScreen(elem);
+  
+    // Assert that the requestFullscreen method was called
+    expect(requestFullscreenSpy).toHaveBeenCalled();
+  
+    // Clean up by removing the element from the DOM
+    document.body.removeChild(elem);
   });
 
-  it('Should request an element to exit from fullscreen mode (native)', () => {
+  it('Should request an element to exit from fullscreen mode (native)', async () => {
     fsAPI.polyfill.exit = 'mockedExitFunction';
+    fsAPI.polyfill.element = 'mockedElement';
 
     (document as any).mockedExitFunction = () => {};
+    (document as any).mockedElement = () => true;
 
     spyOn(document, 'mockedExitFunction' as any).and.callThrough();
 
-    fsAPI.exit();
+    await fsAPI.exit();
 
     expect(fsAPI.isFullscreen).toBeFalsy();
     expect((document as any).mockedExitFunction).toHaveBeenCalled();
   });
 
-  it('Should request an element to exit from fullscreen mode (emulated)', () => {
+  it('Should request an element to exit from fullscreen mode (emulated)', async () => {
     fsAPI.polyfill.exit = 'mockedExitFunction';
 
     (document as any).mockedExitFunction = () => {};
@@ -99,40 +117,40 @@ describe('Videogular Player', () => {
     spyOn(document, 'mockedExitFunction' as any).and.callThrough();
 
     fsAPI.nativeFullscreen = false;
-    fsAPI.exit();
+    await fsAPI.exit();
 
     expect(fsAPI.isFullscreen).toBeFalsy();
     expect((document as any).mockedExitFunction).not.toHaveBeenCalled();
   });
 
-  it('Should enter videogular element to fullscreen mode', () => {
+  it('Should enter videogular element to fullscreen mode', async () => {
     fsAPI.videogularElement = { id: 'vgElem' } as HTMLElement;
 
-    spyOn(fsAPI, 'request').and.callFake(() => {});
+    spyOn(fsAPI, 'request').and.callFake(async() => {});
 
-    fsAPI.toggleFullscreen();
+    await fsAPI.toggleFullscreen();
 
     expect(fsAPI.request).toHaveBeenCalledWith(null);
   });
 
-  it('Should enter other element to fullscreen mode', () => {
+  it('Should enter other element to fullscreen mode', async () => {
     const element = { id: 'main' };
 
     fsAPI.videogularElement = { id: 'vgElem' } as HTMLElement;
 
-    spyOn(fsAPI, 'request').and.callFake(() => {});
+    spyOn(fsAPI, 'request').and.callFake(async() => {});
 
-    fsAPI.toggleFullscreen(element);
+    await fsAPI.toggleFullscreen(element);
 
     expect(fsAPI.request).toHaveBeenCalledWith(element);
   });
 
-  it('Should exit from fullscreen mode', () => {
+  it('Should exit from fullscreen mode', async () => {
     fsAPI.isFullscreen = true;
 
-    spyOn(fsAPI, 'exit').and.callFake(() => {});
+    spyOn(fsAPI, 'exit').and.callFake(async () => {});
 
-    fsAPI.toggleFullscreen();
+    await fsAPI.toggleFullscreen();
 
     expect(fsAPI.exit).toHaveBeenCalled();
   });
