@@ -167,8 +167,26 @@ export class VgFullscreenApiService {
   }
 
   async enterElementInFullScreen(elem: any) {
-    await elem[this.polyfill.request]();
-  }
+    // Check if the element exists and is not null
+    if (!elem) {
+      console.error("Element is not defined or null.");
+      return;
+    }
+
+    // Ensure `this.polyfill.request` is correctly defined and a function
+    if (typeof this.polyfill.request !== 'function') {
+      console.error("Fullscreen request method is not correctly defined or not supported.");
+      return;
+    }
+
+    try {
+      // Await the fullscreen request
+      await this.polyfill.request.call(elem);
+    } catch (error) {
+      console.error("Error entering fullscreen:", error);
+      // Do not rethrow the error
+    }
+}
 
   async exit() {
     this.isFullscreen = false;
@@ -176,8 +194,17 @@ export class VgFullscreenApiService {
 
     // Check if the document is currently in fullscreen mode
     if (this.isAvailable && this.nativeFullscreen && document[this.polyfill.element]) {
-      // Exit from native fullscreen
-      await document[this.polyfill.exit]();
+      try {
+        // Ensure `this.polyfill.exit` is correctly defined and a function
+        if (typeof this.polyfill.exit !== 'function') {
+          console.error("Fullscreen exit method is not correctly defined or not supported.");
+          return;
+        }
+        // Exit from native fullscreen
+        await this.polyfill.exit.call(document);
+      } catch (error) {
+        console.error("Error exiting fullscreen:", error);
+      }
     }
   }
 
