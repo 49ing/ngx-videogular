@@ -173,20 +173,22 @@ export class VgFullscreenApiService {
       return;
     }
 
-    // Ensure `this.polyfill.request` is correctly defined and a function
-    if (typeof this.polyfill.request !== 'function') {
+    // Ensure `this.polyfill.request` is correctly defined and a string
+    if (typeof this.polyfill.request !== 'string' || typeof elem[this.polyfill.request] !== 'function') {
       console.error("Fullscreen request method is not correctly defined or not supported.");
+      console.log("Current value of this.polyfill.request:", this.polyfill.request);
+      console.log("Available properties on elem:", Object.keys(elem));
       return;
     }
 
     try {
       // Await the fullscreen request
-      await this.polyfill.request.call(elem);
+      await elem[this.polyfill.request]();
     } catch (error) {
       console.error("Error entering fullscreen:", error);
       // Do not rethrow the error
     }
-}
+  }
 
   async exit() {
     this.isFullscreen = false;
@@ -195,13 +197,15 @@ export class VgFullscreenApiService {
     // Check if the document is currently in fullscreen mode
     if (this.isAvailable && this.nativeFullscreen && document[this.polyfill.element]) {
       try {
-        // Ensure `this.polyfill.exit` is correctly defined and a function
-        if (typeof this.polyfill.exit !== 'function') {
+        // Ensure `this.polyfill.exit` is correctly defined and a string
+        if (typeof this.polyfill.exit !== 'string' || typeof document[this.polyfill.exit] !== 'function') {
           console.error("Fullscreen exit method is not correctly defined or not supported.");
+          console.log("Current value of this.polyfill.exit:", this.polyfill.exit);
+          console.log("Available properties on document:", Object.keys(document));
           return;
         }
         // Exit from native fullscreen
-        await this.polyfill.exit.call(document);
+        await document[this.polyfill.exit]();
       } catch (error) {
         console.error("Error exiting fullscreen:", error);
       }

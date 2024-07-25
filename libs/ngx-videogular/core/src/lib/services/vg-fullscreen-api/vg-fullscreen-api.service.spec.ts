@@ -84,8 +84,10 @@ describe('Videogular Player', () => {
       });
     });
   
-    fsAPI.polyfill.request = elem.requestFullscreen;
-    
+    // Set the polyfill to use the mock method
+    fsAPI.polyfill = {
+      request: 'requestFullscreen'
+    };
     // Call the fullscreen function
     await fsAPI.enterElementInFullScreen(elem);
   
@@ -98,11 +100,17 @@ describe('Videogular Player', () => {
 
   it('Should request an element to exit from fullscreen mode (native)', async () => {
     // Create a spy function for exiting fullscreen
-    const mockedExitFunction = jasmine.createSpy('mockedExitFunction');
+    const mockedExitFunction = jasmine.createSpy('mockedExitFunction').and.callFake(() => {
+      return new Promise<void>((resolve) => {
+        resolve();
+      });
+    });
     
     // Set up the polyfill to use the mocked function
-    fsAPI.polyfill.exit = mockedExitFunction;
-    fsAPI.polyfill.element = 'mockedElement';
+    fsAPI.polyfill = {
+      exit: 'mockedExitFunction',
+      element: 'mockedElement'
+    };
 
     // Mock the document's exit function to use the spy
     (document as any).mockedExitFunction = mockedExitFunction;
