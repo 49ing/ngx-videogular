@@ -87,27 +87,27 @@ export class VgFullscreenComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('click')
-  onClick() {
-    this.changeFullscreenState();
+  async onClick() {
+    await this.changeFullscreenState();
   }
 
   @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
+  async onKeyDown(event: KeyboardEvent) {
     // On press Enter (13) or Space (32)
     if (event.keyCode === 13 || event.keyCode === 32) {
       event.preventDefault();
-      this.changeFullscreenState();
+      await this.changeFullscreenState();
     }
   }
 
-  changeFullscreenState() {
+  async changeFullscreenState() {
     let element = this.target;
 
     if (this.target instanceof VgApiService) {
       element = null;
     }
 
-    this.fsAPI.toggleFullscreen(element);
+    await this.fsAPI.toggleFullscreen(element);
   }
 
   ngOnDestroy() {

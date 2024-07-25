@@ -130,15 +130,15 @@ export class VgFullscreenApiService {
     this.onChangeFullscreen.emit(isFullscreen);
   }
 
-  toggleFullscreen(element: any = null) {
+  async toggleFullscreen(element: any = null) {
     if (this.isFullscreen) {
-      this.exit();
+      await this.exit();
     } else {
-      this.request(element);
+      await this.request(element);
     }
   }
 
-  request(elem: any) {
+  async request(elem: any) {
     if (!elem) {
       elem = this.videogularElement;
     }
@@ -156,9 +156,9 @@ export class VgFullscreenApiService {
           elem = this.medias.toArray()[0].elem;
         }
 
-        this.enterElementInFullScreen(elem);
+        await this.enterElementInFullScreen(elem);
       } else {
-        this.enterElementInFullScreen(this.videogularElement);
+        await this.enterElementInFullScreen(this.videogularElement);
       }
     }
 
@@ -166,17 +166,49 @@ export class VgFullscreenApiService {
     this.onChangeFullscreen.emit(true);
   }
 
-  enterElementInFullScreen(elem: any) {
-    elem[this.polyfill.request]();
+  async enterElementInFullScreen(elem: any) {
+    // Check if the element exists and is not null
+    if (!elem) {
+      console.error("Element is not defined or null.");
+      return;
+    }
+
+    // Ensure `this.polyfill.request` is correctly defined and a string
+    if (typeof this.polyfill.request !== 'string' || typeof elem[this.polyfill.request] !== 'function') {
+      console.error("Fullscreen request method is not correctly defined or not supported.");
+      console.log("Current value of this.polyfill.request:", this.polyfill.request);
+      console.log("Available properties on elem:", Object.keys(elem));
+      return;
+    }
+
+    try {
+      // Await the fullscreen request
+      await elem[this.polyfill.request]();
+    } catch (error) {
+      console.error("Error entering fullscreen:", error);
+      // Do not rethrow the error
+    }
   }
 
-  exit() {
+  async exit() {
     this.isFullscreen = false;
     this.onChangeFullscreen.emit(false);
 
-    // Exit from native fullscreen
-    if (this.isAvailable && this.nativeFullscreen && document[this.polyfill.exit]) {
-      document[this.polyfill.exit]();
+    // Check if the document is currently in fullscreen mode
+    if (this.isAvailable && this.nativeFullscreen && document[this.polyfill.element]) {
+      try {
+        // Ensure `this.polyfill.exit` is correctly defined and a string
+        if (typeof this.polyfill.exit !== 'string' || typeof document[this.polyfill.exit] !== 'function') {
+          console.error("Fullscreen exit method is not correctly defined or not supported.");
+          console.log("Current value of this.polyfill.exit:", this.polyfill.exit);
+          console.log("Available properties on document:", Object.keys(document));
+          return;
+        }
+        // Exit from native fullscreen
+        await document[this.polyfill.exit]();
+      } catch (error) {
+        console.error("Error exiting fullscreen:", error);
+      }
     }
   }
 
